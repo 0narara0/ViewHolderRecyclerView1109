@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,10 +22,46 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
 
     ArrayList<HashMap<String,Object>> arrayList = null;
-    public RecyclerAdapter(ArrayList<HashMap<String,Object>>arrayList){
-        this.arrayList = new ArrayList<HashMap<String, Object>>();
-        this.arrayList = arrayList;
+//    public RecyclerAdapter(ArrayList<HashMap<String,Object>>arrayList){
+//        this.arrayList = new ArrayList<HashMap<String, Object>>();
+//        this.arrayList = arrayList;
+//    }
+
+    private SQLiteDatabase mdb;
+    public RecyclerAdapter(SQLiteDatabase db) {
+        this.mdb = db;
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+        String date = format.format(new Date());
+
+
+//        String query = "SELECT * FROM ORDERED";
+//        String query = "INSERT INTO ORDERED Values(1,'"+date+"',null);";
+        String query = new StringBuilder().append("select * from ORDERED").toString();
+//        String query = "INSERT INTO ORDERED Values(1,'"+date+"',null);";
+        Cursor cursor = mdb.rawQuery(query, null);
+        ArrayList<HashMap<String, Object>> arrayListTemp = new ArrayList<>();
+        HashMap<String, Object> hashMap = null;
+        while (cursor.moveToNext()) {
+
+            int[] image = {R.drawable.android_image_1, R.drawable.android_image_2, R.drawable.android_image_3,
+                    R.drawable.android_image_4, R.drawable.android_image_5, R.drawable.android_image_6,
+                    R.drawable.android_image_7, R.drawable.android_image_8};
+
+            for (int i = 0; i < 8; i++) {
+                hashMap = new HashMap<String, Object>();
+                hashMap.put("itemTitle", cursor.getString(0));
+                hashMap.put("detail", cursor.getString(1));
+                hashMap.put("image", image[i]);
+                arrayList.add(hashMap);
+
+            }
+
+        }
+        this.arrayList = arrayListTemp;
     }
+
+
 
     @NonNull
     @Override
@@ -64,6 +99,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
 
 
+
     public class  MyViewHolder extends RecyclerView.ViewHolder{
         ImageView itemImage;
         TextView itemTitle, itemDetail;
@@ -84,30 +120,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             });
         }
     }
+
+
     public void removeItem(int position){
         this.arrayList.remove(position);
         notifyDataSetChanged();
     }
 
-    private SQLiteDatabase mdb;
-    public RecyclerAdapter(SQLiteDatabase db){
-        this.mdb = db;
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
-        String date = format.format(new Date());
-
-//        String query = "SELECT * FROM ORDERED";
-        String query = "INSERT INTO ORDERED Values(1,'"+date+"',null);";
-        Cursor cursor = mdb.rawQuery(query,null);
-        ArrayList<HashMap<String,Object>>arrayListTemp = new ArrayList<>();
-        HashMap<String,Object> hashMap = null;
-        while (cursor.moveToNext()){
-            hashMap = new HashMap<String, Object>();
-            hashMap.put("itemTitle",cursor.getString(0));
-            arrayList.add(hashMap);
-        }
-        this.arrayList = arrayListTemp;
+    public void addItem(int position, HashMap<String,Object>hashMap){
+        this.arrayList.add(hashMap);
+        notifyItemInserted(position);
     }
+
+
+
+
+
+
 
 
 
