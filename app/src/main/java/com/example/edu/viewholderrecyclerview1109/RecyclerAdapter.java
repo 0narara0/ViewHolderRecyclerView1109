@@ -99,7 +99,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
 
 
-
     public class  MyViewHolder extends RecyclerView.ViewHolder{
         ImageView itemImage;
         TextView itemTitle, itemDetail;
@@ -122,14 +121,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     }
 
 
-    public void removeItem(int position){
-        this.arrayList.remove(position);
-        notifyDataSetChanged();
-    }
-
     public void addItem(int position, HashMap<String,Object>hashMap){
         this.arrayList.add(hashMap);
         notifyItemInserted(position);
+    }
+
+    public void removeItem(int position){
+        this.arrayList.remove(position);
+        notifyDataSetChanged(); // -> adapter안에 있는 데이터를 기준으로 화면까지 control
+                               // arrayList와 화면의 갯수를 맞춰준다.
     }
 
 

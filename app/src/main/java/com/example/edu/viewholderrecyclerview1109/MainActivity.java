@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String,Object> hashMap = new HashMap<String,Object>();
                 hashMap.put("title","Chapter One");
                 hashMap.put("Image", R.drawable.android_image_1);
-                adapter.addItem(1,hashMap);
+                adapter.addItem(1,hashMap); //1은 위치를 지정한 것, 끝에 추가하려면 max값 다음 값을 넣으면 된다.
             }
         });
 
